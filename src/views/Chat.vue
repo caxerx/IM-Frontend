@@ -317,16 +317,16 @@ export default {
       this.checkingEmail = false;
     },
     getFormattedDate(time) {
-      return this.$moment
+      let date = this.$moment
         .utc(time, "YYYY-MM-DD HH:mm", "YYYY-MM-DD HH:mm")
-        .tz(this.$moment.tz.guess())
-        .format("YYYY-MM-DD");
+        .tz(this.$moment.tz.guess());
+      return (date.isValid() ? date : this.$moment()).format("YYYY-MM-DD");
     },
     getFormattedTime(time) {
-      return this.$moment
+      let date = this.$moment
         .utc(time, "YYYY-MM-DD HH:mm", "YYYY-MM-DD HH:mm")
-        .tz(this.$moment.tz.guess())
-        .format("HH:mm");
+        .tz(this.$moment.tz.guess());
+      return (date.isValid() ? date : this.$moment()).format("HH:mm");
     },
     getLastSendTime(intime) {
       let time = this.$moment
