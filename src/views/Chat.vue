@@ -223,7 +223,9 @@
               <v-spacer></v-spacer>
               <v-tooltip bottom v-if="isSelf">
                 <template v-slot:activator="{ on }">
-                  <v-btn text v-on="on" disabled>Start Conversation</v-btn>
+                  <div v-on="on">
+                    <v-btn text disabled>Start Conversation</v-btn>
+                  </div>
                 </template>
                 <span>You can't start a conversation with yourself.</span>
               </v-tooltip>
