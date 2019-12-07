@@ -365,9 +365,12 @@ export default {
     showSearchDialog() {
       this.userId = null;
       this.foundedOnEmail = "";
+      this.email = "";
     },
-    email() {
-      this.checkEmail();
+    email(val) {
+      if (val) {
+        this.checkEmail();
+      }
     }
   },
   computed: {
