@@ -36,14 +36,13 @@ router.beforeEach((to, _, next) => {
       next("/login");
     } else {
       if (to.name == "InitPage") {
-        next("/chat");
+        router.replace("/chat");
       } else {
         next();
       }
     }
     return;
   }
-
   next();
 });
 
