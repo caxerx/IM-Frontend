@@ -1,6 +1,13 @@
 <template>
   <v-content>
-    <v-navigation-drawer app width="400">
+    <v-navigation-drawer
+      app
+      :width="$vuetify.breakpoint.mdAndDown ? '100vw' : '400'"
+      v-model="showDrawer"
+      touchless
+      stateless
+      hide-overlay
+    >
       <template v-slot:prepend>
         <v-toolbar
           flat
@@ -70,10 +77,20 @@
         </template>
       </v-list>
     </v-navigation-drawer>
-    <v-layout v-if="selectedUser" fill-height column>
+    <div v-if="$vuetify.breakpoint.mdAndDown && showDrawer"></div>
+    <v-layout v-else-if="selectedUser" fill-height column>
       <v-flex shrink>
         <v-card flat>
           <v-list-item>
+            <v-btn
+              @click="mobileDrawer = true"
+              icon
+              v-if="$vuetify.breakpoint.mdAndDown"
+            >
+              <v-icon>
+                navigate_before
+              </v-icon>
+            </v-btn>
             <v-list-item-avatar>
               <v-img
                 :src="
@@ -81,7 +98,9 @@
                 "
               ></v-img>
             </v-list-item-avatar>
-            <v-list-item-content>
+            <v-list-item-content
+              :class="{ 'pl-2': $vuetify.breakpoint.mdAndDown }"
+            >
               <v-list-item-title style="user-select: none;">
                 {{ $store.state.users[selectedUser].email }}
               </v-list-item-title>
@@ -254,6 +273,7 @@ import { debounce } from "lodash";
 export default {
   name: "Chat",
   data: () => ({
+    mobileDrawer: true,
     msgs: {},
     messageToSend: "",
     messageSending: false,
@@ -298,18 +318,20 @@ export default {
     },
     getFormattedDate(time) {
       return this.$moment
-        .utc(time)
+        .utc(time, "YYYY-MM-DD HH:mm", "YYYY-MM-DD HH:mm")
         .tz(this.$moment.tz.guess())
         .format("YYYY-MM-DD");
     },
     getFormattedTime(time) {
       return this.$moment
-        .utc(time)
+        .utc(time, "YYYY-MM-DD HH:mm", "YYYY-MM-DD HH:mm")
         .tz(this.$moment.tz.guess())
         .format("HH:mm");
     },
     getLastSendTime(intime) {
-      let time = this.$moment.utc(intime).tz(this.$moment.tz.guess());
+      let time = this.$moment
+        .utc(intime, "YYYY-MM-DD HH:mm")
+        .tz(this.$moment.tz.guess());
       let now = this.$moment();
       if (!time.isValid()) {
         return "";
@@ -331,14 +353,20 @@ export default {
         this.$store.state.message[this.selectedUser][index].time == "sending"
           ? this.$moment()
           : this.$moment
-              .utc(this.$store.state.message[this.selectedUser][index].time)
+              .utc(
+                this.$store.state.message[this.selectedUser][index].time,
+                "YYYY-MM-DD HH:mm"
+              )
               .tz(this.$moment.tz.guess());
       let lastMsg =
         this.$store.state.message[this.selectedUser][index - 1].time ==
         "sending"
           ? this.$moment()
           : this.$moment
-              .utc(this.$store.state.message[this.selectedUser][index - 1].time)
+              .utc(
+                this.$store.state.message[this.selectedUser][index - 1].time,
+                "YYYY-MM-DD HH:mm"
+              )
               .tz(this.$moment.tz.guess());
 
       return !thisMsg.isSame(lastMsg, "day");
@@ -357,7 +385,9 @@ export default {
     scrollToBottom() {
       setTimeout(() => {
         let cse = this.$refs.chatScroll;
-        cse.scrollTo(0, cse.scrollHeight);
+        if (cse) {
+          cse.scrollTo(0, cse.scrollHeight);
+        }
       }, 100);
     }
   },
@@ -371,10 +401,28 @@ export default {
       if (val) {
         this.checkEmail();
       }
+    },
+    message: {
+      deep: true,
+      handler() {
+        this.scrollToBottom();
+      }
     }
   },
   computed: {
     ...mapState(["message"]),
+    showDrawer: {
+      get() {
+        return (
+          this.$vuetify.breakpoint.lgAndUp ||
+          (this.$vuetify.breakpoint.mdAndDown && !this.selectedUser) ||
+          this.mobileDrawer
+        );
+      },
+      set(val) {
+        this.mobileDrawer = val;
+      }
+    },
     isSelf() {
       return this.userId == this.$store.state.userId;
     },
@@ -386,6 +434,7 @@ export default {
         this.$store.commit("SELECT_USER", val);
         this.messageToSend = "";
         this.scrollToBottom();
+        this.mobileDrawer = false;
       }
     }
   }
