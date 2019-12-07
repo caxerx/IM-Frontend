@@ -10,6 +10,10 @@
   "dependencies": {
     "@mdi/font": "^3.6.95",
     "core-js": "^3.4.3",
+    "crypto-js": "^3.1.9-1",
+    "lodash": "^4.17.15",
+    "moment-timezone": "^0.5.27",
+    "pusher-js": "^5.0.3",
     "register-service-worker": "^1.6.2",
     "roboto-fontface": "*",
     "vue": "^2.6.10",
