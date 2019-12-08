@@ -19,7 +19,6 @@ In the developement mode, it run on a node.js web server.
 
 In the production mode, it compiles the project into a static website (HTML+CSS+JS). It require a web server to run, open index.html on local will not work.
 
-
 ### 1. Install all dependency
 
 ```
@@ -31,7 +30,7 @@ yarn install
 yarn serve
 ```
 
-### 3. Compile the file into the production mode
+### 3. (Optional) Compile the file into the production mode
 ```
 yarn build
 ```
