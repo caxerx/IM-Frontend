@@ -6,7 +6,7 @@ yarn 1.19.1
 
 ## Configuration
 Some config is required on .env file.
-VUE_APP_BASE_URL - The base url of api server.
+VUE_APP_BASE_URL - The base url of api server. (Please make sure CORS setting on server is correct)
 VUE_APP_PUSHER_APP_KEY - Pusher APP Key
 VUE_APP_PUSHER_APP_CLUSTER - Pusher APP Cluster
 
